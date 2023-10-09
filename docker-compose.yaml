@@ -1,0 +1,14 @@
+version: '3.3'
+
+services:
+  postgresql:
+    image: postgres
+    container_name: pseudo-hibernate
+    ports:
+      - "5436:5440"
+    volumes:
+      - ./dump:/docker-entrypoint-initdb.d
+      - ./data/postgres:/var/lib/postgresql/pseudo-hibernate 777
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
