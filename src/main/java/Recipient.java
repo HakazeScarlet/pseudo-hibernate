@@ -5,17 +5,17 @@ public class Recipient {
     private Long id;
 
     @Column
-    private String userName;
+    private String name;
 
     @Column
     private String email;
     
-    private String getUserName() {
-        return userName;
+    private String getName() {
+        return name;
     }
 
-    private void setUserName(String userName) {
-        this.userName = userName;
+    private void setName(String name) {
+        this.name = name;
     }
 
     private String getEmail() {

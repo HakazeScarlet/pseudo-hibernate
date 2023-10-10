@@ -1,12 +1,9 @@
-import util.StringUtil;
+import java.sql.SQLException;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
-//        ColumnProcessor processor = new ColumnProcessor(new DataSourceProvider().create());
-//        processor.process(new Recipient());
-
-        System.out.println(StringUtil.convertCamelCaseToSnakeCase("ILoveSweetBlackTea"));
-        System.out.println(StringUtil.convertCamelCaseToSnakeCase("iLoveSweetBlackTea"));
+        TableProcessor processor = new TableProcessor(new DataSourceProvider().create());
+        processor.process(new Recipient());
     }
 }

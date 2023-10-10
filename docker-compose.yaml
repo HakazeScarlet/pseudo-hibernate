@@ -5,10 +5,10 @@ services:
     image: postgres
     container_name: pseudo-hibernate
     ports:
-      - "5436:5440"
+      - "5434:5432"
     volumes:
-      - ./dump:/docker-entrypoint-initdb.d
       - ./data/postgres:/var/lib/postgresql/pseudo-hibernate 777
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=test_db
