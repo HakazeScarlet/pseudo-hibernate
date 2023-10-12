@@ -18,10 +18,10 @@ public class TableProcessor {
 
         if (objectClass.isAnnotationPresent(Table.class)) {
             String name = objectClass.getName();
-            String convertedName = StringUtil.convertCamelCaseToSnakeCase(name);
+            String convertedTableName = StringUtil.convertCamelCaseToSnakeCase(name);
 
             try (Connection connection = dataSource.getConnection()) {
-                PreparedStatement statement = connection.prepareStatement("CREATE TABLE " + convertedName + "()");
+                PreparedStatement statement = connection.prepareStatement("CREATE TABLE " + convertedTableName + "()");
                 statement.execute();
             }
         }
