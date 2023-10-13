@@ -2,6 +2,7 @@ import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
 
+// TODO: extract values to .idea configurations
 public class DataSourceProvider {
 
     public DataSource create() {

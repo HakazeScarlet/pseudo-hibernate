@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+// TODO: get rid of "throws" and extract connection to constructor
 public class TableProcessor {
 
     private final DataSource dataSource;

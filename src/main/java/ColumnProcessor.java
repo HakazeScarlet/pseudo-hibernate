@@ -10,30 +10,68 @@ import java.util.List;
 
 public class ColumnProcessor {
 
-    private final DataSource dataSource;
+    private final Connection connection;
 
     public ColumnProcessor(DataSource dataSource) {
-        this.dataSource = dataSource;
+        try {
+            this.connection = dataSource.getConnection();
+        } catch (SQLException e) {
+            throw new ConnectionException(""); // TODO: add message
+        }
     }
 
-    public void process(Object object) throws SQLException {
+    public void process(Object object) {
         Class<?> objectClass = object.getClass();
 
         List<Field> annotatedFields = Arrays.stream(objectClass.getDeclaredFields())
             .filter(field -> field.isAnnotationPresent(Column.class))
             .toList();
 
-        objectClass.isAnnotationPresent(Table.class);
-        String tableName = objectClass.getName();
-        String convertedTableName = StringUtil.convertCamelCaseToSnakeCase(tableName);
-
         for (Field field : annotatedFields) {
             String name = field.getName();
             String convertedFieldName = StringUtil.convertCamelCaseToSnakeCase(name);
 
-            Connection connection = dataSource.getConnection();
-            PreparedStatement statement = connection.prepareStatement("ALTER TABLE " + convertedTableName + " ADD COLUMN " + convertedFieldName + " VARCHAR (50) ");
-            statement.execute();
+            try {
+                PreparedStatement statement = connection.prepareStatement(
+                    "ALTER TABLE " + getTableName(objectClass) + " ADD COLUMN " + convertedFieldName + " VARCHAR (50)"
+                );
+
+//                PreparedStatement statement = connection.prepareStatement(
+//                    "ALTER TABLE " + getTableName(objectClass) + " ADD COLUMN " + convertedFieldName + mapType(field.getType())
+//                );
+                statement.execute();
+            } catch(SQLException e) {
+                // TODO: do something
+            }
+        }
+    }
+
+    private String mapType(Class<?> type) {
+        // TODO: add types remapping (think about java enum)
+//        type String -> "character varying(64)"
+//        type int -> "integer"
+        return null;
+    }
+
+    private String getTableName(Class<?> objectClass) {
+        if (objectClass.isAnnotationPresent(Table.class)) {
+            String tableName = objectClass.getName();
+            return StringUtil.convertCamelCaseToSnakeCase(tableName);
+        }
+        throw new TableIsNotPresentException("The " + objectClass.getName() + " isn't a table");
+    }
+
+    private static final class TableIsNotPresentException extends RuntimeException {
+
+        public TableIsNotPresentException(String message) {
+            super(message);
+        }
+    }
+
+    private static final class ConnectionException extends RuntimeException {
+
+        public ConnectionException(String message) {
+            // TODO: add super
         }
     }
 }
