@@ -16,7 +16,7 @@ public class ColumnProcessor {
         try {
             this.connection = dataSource.getConnection();
         } catch (SQLException e) {
-            throw new ConnectionException(""); // TODO: add message
+            throw new ConnectionException("Connect to the database is failed");
         }
     }
 
@@ -35,13 +35,12 @@ public class ColumnProcessor {
                 PreparedStatement statement = connection.prepareStatement(
                     "ALTER TABLE " + getTableName(objectClass) + " ADD COLUMN " + convertedFieldName + " VARCHAR (50)"
                 );
-
 //                PreparedStatement statement = connection.prepareStatement(
 //                    "ALTER TABLE " + getTableName(objectClass) + " ADD COLUMN " + convertedFieldName + mapType(field.getType())
 //                );
                 statement.execute();
             } catch(SQLException e) {
-                // TODO: do something
+                throw new PrepareStatementException("Invalid database request");
             }
         }
     }
@@ -71,7 +70,14 @@ public class ColumnProcessor {
     private static final class ConnectionException extends RuntimeException {
 
         public ConnectionException(String message) {
-            // TODO: add super
+            super(message);
+        }
+    }
+
+    private static final class PrepareStatementException extends RuntimeException {
+
+        public PrepareStatementException(String message) {
+            super(message);
         }
     }
 }

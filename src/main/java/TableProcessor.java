@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-// TODO: get rid of "throws" and extract connection to constructor
 public class TableProcessor {
 
     private final DataSource dataSource;
@@ -14,7 +13,7 @@ public class TableProcessor {
         this.dataSource = dataSource;
     }
 
-    public void process(Object object) throws SQLException {
+    public void process(Object object) {
         Class<?> objectClass = object.getClass();
 
         if (objectClass.isAnnotationPresent(Table.class)) {
@@ -24,7 +23,16 @@ public class TableProcessor {
             try (Connection connection = dataSource.getConnection()) {
                 PreparedStatement statement = connection.prepareStatement("CREATE TABLE " + convertedTableName + "()");
                 statement.execute();
+            } catch (SQLException e) {
+                throw new DatabaseQueryException("Connect to database is fail or invalid database request");
             }
+        }
+    }
+
+    private static final class DatabaseQueryException extends RuntimeException {
+
+        public DatabaseQueryException(String message) {
+            super(message);
         }
     }
 }
