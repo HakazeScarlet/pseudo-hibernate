@@ -1,3 +1,6 @@
+package annotation_processors;
+
+import annotations.Table;
 import util.StringUtil;
 
 import javax.sql.DataSource;

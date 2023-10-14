@@ -1,3 +1,7 @@
+package annotation_processors;
+
+import annotations.Column;
+import annotations.Table;
 import util.StringUtil;
 
 import javax.sql.DataSource;
@@ -33,23 +37,13 @@ public class ColumnProcessor {
 
             try {
                 PreparedStatement statement = connection.prepareStatement(
-                    "ALTER TABLE " + getTableName(objectClass) + " ADD COLUMN " + convertedFieldName + " VARCHAR (50)"
+                    "ALTER TABLE " + getTableName(objectClass) + " ADD COLUMN " + convertedFieldName + TypeConverter.getType(field.getType())
                 );
-//                PreparedStatement statement = connection.prepareStatement(
-//                    "ALTER TABLE " + getTableName(objectClass) + " ADD COLUMN " + convertedFieldName + mapType(field.getType())
-//                );
                 statement.execute();
             } catch(SQLException e) {
                 throw new PrepareStatementException("Invalid database request");
             }
         }
-    }
-
-    private String mapType(Class<?> type) {
-        // TODO: add types remapping (think about java enum)
-//        type String -> "character varying(64)"
-//        type int -> "integer"
-        return null;
     }
 
     private String getTableName(Class<?> objectClass) {

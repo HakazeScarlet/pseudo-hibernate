@@ -1,3 +1,7 @@
+import annotations.Column;
+import annotations.Id;
+import annotations.Table;
+
 @Table
 public class Recipient {
 
