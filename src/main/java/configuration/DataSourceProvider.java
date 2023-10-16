@@ -1,4 +1,4 @@
-package properties;
+package configuration;
 
 import org.postgresql.ds.PGSimpleDataSource;
 

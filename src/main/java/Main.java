@@ -1,10 +1,10 @@
-import annotation_processors.ColumnProcessor;
-import properties.DataSourceProvider;
+import annotation_processors.IdProcessor;
+import configuration.DataSourceProvider;
 
 public class Main {
 
     public static void main(String[] args) {
-        ColumnProcessor processor = new ColumnProcessor(new DataSourceProvider().create());
+        IdProcessor processor = new IdProcessor(new DataSourceProvider().create());
         processor.process(new Recipient());
     }
 }
