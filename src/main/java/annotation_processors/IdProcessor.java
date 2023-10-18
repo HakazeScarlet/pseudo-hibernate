@@ -1,6 +1,7 @@
 package annotation_processors;
 
 import annotations.Id;
+import annotations.Table;
 import util.StringUtil;
 
 import javax.sql.DataSource;
@@ -35,12 +36,16 @@ public class IdProcessor {
         if (size == 1) {
             Field field = ids.get(0);
             String name = field.getName();
-            String converted = StringUtil.convertCamelCaseToSnakeCase(name);
+            String convertedIdField = StringUtil.convertCamelCaseToSnakeCase(name);
 
-            // TODO: add table name
             try {
                 PreparedStatement statement = connection.prepareStatement(
-                    " ADD COLUMN " + converted + TypeConverter.getType(field.getType())
+                    " ALTER TABLE " +
+                        getTableName(objectClass) +
+                        " ADD COLUMN " +
+                        convertedIdField +
+                        TypeConverter.getType(field.getType()) +
+                        " SERIAL PRIMARY KEY "
                 );
                 statement.execute();
             } catch (SQLException e) {
@@ -51,9 +56,24 @@ public class IdProcessor {
         }
     }
 
+    private String getTableName(Class<?> objectClass) {
+        if (objectClass.isAnnotationPresent(Table.class)) {
+            String tableName = objectClass.getName();
+            return StringUtil.convertCamelCaseToSnakeCase(tableName);
+        }
+        throw new TableIsNotPresentException("The " + objectClass.getName() + " isn't a table");
+    }
+
     private static final class ConnectionException extends RuntimeException {
 
         public ConnectionException(String message) {
+            super(message);
+        }
+    }
+
+    private static final class TableIsNotPresentException extends RuntimeException {
+
+        public TableIsNotPresentException(String message) {
             super(message);
         }
     }

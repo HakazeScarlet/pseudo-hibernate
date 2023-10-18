@@ -1,10 +1,10 @@
-import annotation_processors.IdProcessor;
+import annotation_processors.TableProcessor;
 import configuration.DataSourceProvider;
 
 public class Main {
 
     public static void main(String[] args) {
-        IdProcessor processor = new IdProcessor(new DataSourceProvider().create());
+        TableProcessor processor = new TableProcessor(new DataSourceProvider().create());
         processor.process(new Recipient());
     }
 }
