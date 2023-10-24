@@ -1,6 +1,8 @@
 package annotation_processors;
 
 import annotations.Table;
+import exceptions.DBConnectionException;
+import exceptions.DBRequestException;
 import util.StringUtil;
 
 import javax.sql.DataSource;
@@ -10,10 +12,14 @@ import java.sql.SQLException;
 
 public class TableProcessor {
 
-    private final DataSource dataSource;
+    private final Connection connection;
 
     public TableProcessor(DataSource dataSource) {
-        this.dataSource = dataSource;
+        try {
+            this.connection = dataSource.getConnection();
+        } catch (SQLException e) {
+            throw new DBConnectionException("Connect to the database is failed");
+        }
     }
 
     public void process(Object object) {
@@ -23,19 +29,12 @@ public class TableProcessor {
             String name = objectClass.getName();
             String convertedTableName = StringUtil.convertCamelCaseToSnakeCase(name);
 
-            try (Connection connection = dataSource.getConnection()) {
+            try {
                 PreparedStatement statement = connection.prepareStatement("CREATE TABLE " + convertedTableName + "()");
                 statement.execute();
             } catch (SQLException e) {
-                throw new DatabaseQueryException("Connect to database is fail or invalid database request");
+                throw new DBRequestException("Invalid database request");
             }
-        }
-    }
-
-    private static final class DatabaseQueryException extends RuntimeException {
-
-        public DatabaseQueryException(String message) {
-            super(message);
         }
     }
 }

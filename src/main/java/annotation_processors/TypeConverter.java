@@ -9,7 +9,7 @@ public enum TypeConverter {
     STRING(String.class, "CHARACTER VARYING(64)"),
     INTEGER(Integer.class, "INTEGER"),
     LONG(Long.class, "SERIAL"),
-    DOUBLE(Double.class, "DOUBLE PRECISIGION"),
+    DOUBLE(Double.class, "DOUBLE PRECISION"),
     BOOLEAN(Boolean.class, "BOOLEAN"),
     ;
 

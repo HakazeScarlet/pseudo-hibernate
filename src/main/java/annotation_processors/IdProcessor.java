@@ -1,7 +1,8 @@
 package annotation_processors;
 
 import annotations.Id;
-import annotations.Table;
+import exceptions.DBConnectionException;
+import exceptions.DBRequestException;
 import util.StringUtil;
 
 import javax.sql.DataSource;
@@ -12,7 +13,11 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
+import static util.TableUtil.getTableName;
+
 public class IdProcessor {
+
+    private static final int ID_FIELD_COUNT = 1;
 
     private final Connection connection;
 
@@ -20,7 +25,7 @@ public class IdProcessor {
         try {
             this.connection = dataSource.getConnection();
         } catch (SQLException e) {
-            throw new ConnectionException("Connect to the database is failed");
+            throw new DBConnectionException("Connect to the database is failed");
         }
     }
 
@@ -33,7 +38,7 @@ public class IdProcessor {
             .toList();
 
         int size = ids.size();
-        if (size == 1) {
+        if (size == ID_FIELD_COUNT) {
             Field field = ids.get(0);
             String name = field.getName();
             String convertedIdField = StringUtil.convertCamelCaseToSnakeCase(name);
@@ -45,43 +50,18 @@ public class IdProcessor {
                         " ADD COLUMN " +
                         convertedIdField +
                         TypeConverter.getType(field.getType()) +
-                        " SERIAL PRIMARY KEY "
+                        " CONSTRAINT " +
+                        convertedIdField +
+                        "_pk" +
+                        " PRIMARY KEY " +
+                        "(" + convertedIdField + ");"
                 );
                 statement.execute();
             } catch (SQLException e) {
-                throw new PreparedStatementException("Invalid database request");
+                throw new DBRequestException("Invalid database request");
             }
         } else {
             throw new MostThanOneIdField("Most Than One Id has been detected in class " + objectClass);
-        }
-    }
-
-    private String getTableName(Class<?> objectClass) {
-        if (objectClass.isAnnotationPresent(Table.class)) {
-            String tableName = objectClass.getName();
-            return StringUtil.convertCamelCaseToSnakeCase(tableName);
-        }
-        throw new TableIsNotPresentException("The " + objectClass.getName() + " isn't a table");
-    }
-
-    private static final class ConnectionException extends RuntimeException {
-
-        public ConnectionException(String message) {
-            super(message);
-        }
-    }
-
-    private static final class TableIsNotPresentException extends RuntimeException {
-
-        public TableIsNotPresentException(String message) {
-            super(message);
-        }
-    }
-
-    private static final class PreparedStatementException extends RuntimeException {
-
-        public PreparedStatementException(String message) {
-            super(message);
         }
     }
 

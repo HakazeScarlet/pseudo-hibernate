@@ -1,7 +1,8 @@
 package annotation_processors;
 
 import annotations.Column;
-import annotations.Table;
+import exceptions.DBConnectionException;
+import exceptions.DBRequestException;
 import util.StringUtil;
 
 import javax.sql.DataSource;
@@ -12,6 +13,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
+import static util.TableUtil.getTableName;
+
 public class ColumnProcessor {
 
     private final Connection connection;
@@ -20,7 +23,7 @@ public class ColumnProcessor {
         try {
             this.connection = dataSource.getConnection();
         } catch (SQLException e) {
-            throw new ConnectionException("Connect to the database is failed");
+            throw new DBConnectionException("Connect to the database is failed");
         }
     }
 
@@ -41,39 +44,11 @@ public class ColumnProcessor {
                 );
                 statement.execute();
             } catch(SQLException e) {
-                throw new PrepareStatementException("Invalid database request");
+                throw new DBRequestException("Invalid database request");
             }
         }
     }
 
-    private String getTableName(Class<?> objectClass) {
-        if (objectClass.isAnnotationPresent(Table.class)) {
-            String tableName = objectClass.getName();
-            return StringUtil.convertCamelCaseToSnakeCase(tableName);
-        }
-        throw new TableIsNotPresentException("The " + objectClass.getName() + " isn't a table");
-    }
-
-    private static final class TableIsNotPresentException extends RuntimeException {
-
-        public TableIsNotPresentException(String message) {
-            super(message);
-        }
-    }
-
-    private static final class ConnectionException extends RuntimeException {
-
-        public ConnectionException(String message) {
-            super(message);
-        }
-    }
-
-    private static final class PrepareStatementException extends RuntimeException {
-
-        public PrepareStatementException(String message) {
-            super(message);
-        }
-    }
 }
 
 

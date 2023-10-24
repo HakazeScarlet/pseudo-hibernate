@@ -16,4 +16,10 @@ public class Recipient {
 
     @Column
     private String email;
+
+    @Column
+    private Double amountOnAccount;
+
+    @Column
+    private Boolean vipAccount;
 }
