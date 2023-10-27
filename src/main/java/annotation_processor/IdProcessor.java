@@ -1,8 +1,8 @@
-package annotation_processors;
+package annotation_processor;
 
-import annotations.Id;
-import exceptions.DBConnectionException;
-import exceptions.DBRequestException;
+import annotation.Id;
+import exception.DBConnectionException;
+import exception.DBRequestException;
 import util.StringUtil;
 
 import javax.sql.DataSource;
@@ -43,19 +43,21 @@ public class IdProcessor {
             String name = field.getName();
             String convertedIdField = StringUtil.convertCamelCaseToSnakeCase(name);
 
+            // TODO: fix query
             try {
-                PreparedStatement statement = connection.prepareStatement(
-                    " ALTER TABLE " +
-                        getTableName(objectClass) +
-                        " ADD COLUMN " +
-                        convertedIdField +
-                        TypeConverter.getType(field.getType()) +
-                        " CONSTRAINT " +
-                        convertedIdField +
-                        "_pk" +
-                        " PRIMARY KEY " +
-                        "(" + convertedIdField + ");"
-                );
+                String query = "ALTER TABLE " +
+                    getTableName(objectClass) +
+                    " ADD COLUMN " +
+                    convertedIdField +
+                    " " +
+                    TypeConverter.getType(field.getType()) +
+                    " CONSTRAINT " +
+                    convertedIdField +
+                    "_pk" +
+                    " PRIMARY KEY " +
+                    "(" + convertedIdField + ");";
+
+                PreparedStatement statement = connection.prepareStatement(query);
                 statement.execute();
             } catch (SQLException e) {
                 throw new DBRequestException("Invalid database request");

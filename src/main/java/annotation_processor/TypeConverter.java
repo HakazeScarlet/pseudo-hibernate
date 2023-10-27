@@ -1,4 +1,4 @@
-package annotation_processors;
+package annotation_processor;
 
 import java.util.Arrays;
 import java.util.Map;

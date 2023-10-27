@@ -1,8 +1,8 @@
 package util;
 
-import annotations.Table;
+import annotation.Table;
 
-public class TableUtil {
+public final class TableUtil {
 
     private TableUtil() {
         // hide public constructor

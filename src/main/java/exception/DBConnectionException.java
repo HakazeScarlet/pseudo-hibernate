@@ -1,4 +1,4 @@
-package exceptions;
+package exception;
 
 public final class DBConnectionException extends RuntimeException {
 

@@ -1,6 +1,6 @@
-import annotations.Column;
-import annotations.Id;
-import annotations.Table;
+import annotation.Column;
+import annotation.Id;
+import annotation.Table;
 
 @Table
 public class Recipient {

@@ -1,8 +1,8 @@
-package annotation_processors;
+package annotation_processor;
 
-import annotations.Column;
-import exceptions.DBConnectionException;
-import exceptions.DBRequestException;
+import annotation.Column;
+import exception.DBConnectionException;
+import exception.DBRequestException;
 import util.StringUtil;
 
 import javax.sql.DataSource;
