@@ -8,8 +8,12 @@ public class Recipient {
     @Id
     private Long id;
 
+    // TODO: implement primitives handling
+//    @Column
+//    private int age;
+
     @Column
-    private int age;
+    private Integer age;
 
     @Column
     private String name;

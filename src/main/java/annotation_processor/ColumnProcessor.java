@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
+import static util.StringUtil.SPACE;
 import static util.TableUtil.getTableName;
 
 public class ColumnProcessor {
@@ -39,16 +40,19 @@ public class ColumnProcessor {
             String convertedFieldName = StringUtil.convertCamelCaseToSnakeCase(name);
 
             try {
-                PreparedStatement statement = connection.prepareStatement(
-                    "ALTER TABLE " + getTableName(objectClass) + " ADD COLUMN " + convertedFieldName + TypeConverter.getType(field.getType())
-                );
+                String sqlQuery = "ALTER TABLE" + SPACE
+                    + getTableName(objectClass) + SPACE
+                    + "ADD COLUMN" + SPACE
+                    + convertedFieldName + SPACE
+                    + TypeConverter.getType(field.getType());
+
+                PreparedStatement statement = connection.prepareStatement(sqlQuery);
                 statement.execute();
             } catch(SQLException e) {
                 throw new DBRequestException("Invalid database request");
             }
         }
     }
-
 }
 
 

@@ -2,6 +2,7 @@ package annotation_processor;
 
 import exception.DBConnectionException;
 import exception.DBRequestException;
+import util.StringUtil;
 import util.TableUtil;
 
 import javax.sql.DataSource;
@@ -25,7 +26,8 @@ public class TableProcessor {
         Class<?> objectClass = object.getClass();
         String convertedTableName = TableUtil.getTableName(objectClass);
         try {
-            PreparedStatement statement = connection.prepareStatement("CREATE TABLE " + convertedTableName + "()");
+            String sqlQuery = "CREATE TABLE" + StringUtil.SPACE + convertedTableName + "()";
+            PreparedStatement statement = connection.prepareStatement(sqlQuery);
             statement.execute();
         } catch (SQLException e) {
             throw new DBRequestException("Invalid database request");

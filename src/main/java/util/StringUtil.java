@@ -2,6 +2,8 @@ package util;
 
 public final class StringUtil {
 
+    public static final String SPACE = " ";
+
     private StringUtil() {
         // hide public constructor
     }

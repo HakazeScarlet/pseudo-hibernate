@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
+import static util.StringUtil.SPACE;
 import static util.TableUtil.getTableName;
 
 public class IdProcessor {
@@ -43,33 +44,33 @@ public class IdProcessor {
             String name = field.getName();
             String convertedIdField = StringUtil.convertCamelCaseToSnakeCase(name);
 
-            // TODO: fix query
-            try {
-                String query = "ALTER TABLE " +
-                    getTableName(objectClass) +
-                    " ADD COLUMN " +
-                    convertedIdField +
-                    " " +
-                    TypeConverter.getType(field.getType()) +
-                    " CONSTRAINT " +
-                    convertedIdField +
-                    "_pk" +
-                    " PRIMARY KEY " +
-                    "(" + convertedIdField + ");";
+            StringBuilder sqlQuery = new StringBuilder();
+            sqlQuery.append("ALTER TABLE").append(SPACE)
+                .append(getTableName(objectClass)).append(SPACE)
+                .append("ADD COLUMN").append(SPACE)
+                .append(convertedIdField).append(SPACE)
+                .append(TypeConverter.getType(field.getType()))
+                .append(",").append(SPACE)
+                .append("ADD CONSTRAINT").append(SPACE)
+                .append(convertedIdField)
+                .append("_pk").append(SPACE)
+                .append("PRIMARY KEY")
+                .append("(").append(convertedIdField).append(")").append(";");
 
-                PreparedStatement statement = connection.prepareStatement(query);
+            try {
+                PreparedStatement statement = connection.prepareStatement(sqlQuery.toString());
                 statement.execute();
             } catch (SQLException e) {
                 throw new DBRequestException("Invalid database request");
             }
         } else {
-            throw new MostThanOneIdField("Most Than One Id has been detected in class " + objectClass);
+            throw new MoreThanOneIdField("More than one id has been detected in class " + objectClass);
         }
     }
 
-    private static final class MostThanOneIdField extends RuntimeException {
+    private static final class MoreThanOneIdField extends RuntimeException {
 
-        public MostThanOneIdField(String message) {
+        public MoreThanOneIdField(String message) {
             super(message);
         }
     }

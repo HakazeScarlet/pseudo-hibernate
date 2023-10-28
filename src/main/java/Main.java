@@ -11,6 +11,7 @@ public class Main {
         DataSource dataSource = new DataSourceProvider().create();
         Recipient recipient = new Recipient();
 
+        // TODO: refactor all processors again
         TableProcessor tableProcessor = new TableProcessor(dataSource);
         tableProcessor.process(recipient);
 
