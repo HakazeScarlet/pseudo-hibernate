@@ -9,16 +9,16 @@ public final class TableUtil {
     }
 
     public static String getTableName(Class<?> objectClass) {
-        if (objectClass.isAnnotationPresent(Table.class)) {
-            String tableName = objectClass.getName();
+        if (objectClass != null && objectClass.isAnnotationPresent(Table.class)) {
+            String tableName = objectClass.getSimpleName();
             return StringUtil.convertCamelCaseToSnakeCase(tableName);
         }
-        throw new TableIsNotPresentException("The " + objectClass.getName() + " isn't a table");
+        throw new IncorrectObjectClassException("Parameter objectClass is null, or not annotated: " + objectClass);
     }
 
-    public static final class TableIsNotPresentException extends RuntimeException {
+    public static final class IncorrectObjectClassException extends RuntimeException {
 
-        public TableIsNotPresentException(String message) {
+        public IncorrectObjectClassException(String message) {
             super(message);
         }
     }
