@@ -16,7 +16,7 @@ public final class TableUtil {
         throw new TableIsNotPresentException("The " + objectClass.getName() + " isn't a table");
     }
 
-    private static final class TableIsNotPresentException extends RuntimeException {
+    public static final class TableIsNotPresentException extends RuntimeException {
 
         public TableIsNotPresentException(String message) {
             super(message);
