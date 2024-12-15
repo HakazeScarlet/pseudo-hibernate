@@ -2,7 +2,7 @@ package util;
 
 public final class StringUtil {
 
-    public static final String SPACE = " ";
+    public static final String SPACE = "\\s";
 
     private StringUtil() {
         // hide public constructor

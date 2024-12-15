@@ -13,7 +13,7 @@ public final class TableUtil {
             String tableName = objectClass.getSimpleName();
             return StringUtil.convertCamelCaseToSnakeCase(tableName);
         }
-        throw new IncorrectObjectClassException("Parameter objectClass is null, or not annotated: " + objectClass);
+        throw new IncorrectObjectClassException("Parameter objectClass is null or not annotated: " + objectClass);
     }
 
     public static final class IncorrectObjectClassException extends RuntimeException {

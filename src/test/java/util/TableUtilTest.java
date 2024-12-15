@@ -14,7 +14,7 @@ class TableUtilTest {
     }
 
     @Test
-    void whenTableAnnotationIsNotPresent_throwTableIsNotPresentException() {
+    void whenTableAnnotationIsNotPresent_throwIncorrectObjectClassException() {
         assertThrows(
             TableUtil.IncorrectObjectClassException.class,
             () -> TableUtil.getTableName(ItemWithoutTableAnnotation.class)
@@ -22,7 +22,7 @@ class TableUtilTest {
     }
 
     @Test
-    void whenObjectClassIsNull_throwObjectClassIsNull() {
+    void whenObjectClassIsNull_throwIncorrectObjectClassException() {
         assertThrows(
             TableUtil.IncorrectObjectClassException.class,
             () -> TableUtil.getTableName(null)

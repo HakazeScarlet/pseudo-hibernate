@@ -8,12 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class StringUtilTest {
 
     @Test
-    void whenStringIsInCamelCase_returnStringInSnakeCase() {
-        String expected = "camel_string";
-
+    void whenCamelCaseString_returnSnakeCaseString() {
         String actual = StringUtil.convertCamelCaseToSnakeCase("CamelString");
-
-        assertEquals(expected, actual);
+        assertEquals("camel_string", actual);
     }
 
     @Test
@@ -23,7 +20,7 @@ class StringUtilTest {
     }
 
     @Test
-    void whenStringIsNull_throwNullPointerException() {
+    void whenStringIsNull_throwNullStringException() {
         assertThrows(
             StringUtil.NullStringException.class,
             () -> StringUtil.convertCamelCaseToSnakeCase(null)
@@ -31,13 +28,13 @@ class StringUtilTest {
     }
 
     @Test
-    void whenStringIsInSnakeCase_returnStringInSnakeCase() {
+    void whenSnakeCaseString_returnSnakeCaseString() {
         String actual = StringUtil.convertCamelCaseToSnakeCase("snake_case");
         assertEquals("snake_case", actual);
     }
 
     @Test
-    void whenStringHasRandomSymbolsInString_returnSameString() {
+    void whenNoCaseString_returnSameString() {
         String actual = StringUtil.convertCamelCaseToSnakeCase("somethingstring");
         assertEquals("somethingstring", actual);
     }
